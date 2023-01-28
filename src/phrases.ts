@@ -1,3 +1,4 @@
+// a list of phrases
 export default [
   "blue in the face",
   "ignorance is bliss",
@@ -17,5 +18,15 @@ export default [
   "don't beat a dead horse",
   "point of no return",
   "shiver me timbers",
-  "tell it to the judge"
+  "tell it to the judge",
+  "a chip on your shoulder",
+  "back to the drawing board",
+  "get your act together",
+  "go with the flow",
+  "it's raining cats and dogs",
+  "kick the bucket",
+  "let sleeping dogs lie",
+  "make a mountain out of a molehill",
+  "on the same page",
+  "when pigs fly"
 ]
