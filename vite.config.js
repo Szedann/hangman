@@ -6,7 +6,6 @@ export default defineConfig({
 	plugins: [svelte()],
 	server: {
 		hmr: {
-			port: 80,
 			clientPort: 443
 		}
 	}

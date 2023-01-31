@@ -1,6 +1,10 @@
 <script lang="ts">
   import phrases from "./phrases";
-
+  const mode = window.location.href
+    .split("/")
+    .filter((s) => s.length > 0)
+    .at(-1);
+  console.log(mode);
   let showInput = false;
   let word = "";
   let started = false;
@@ -24,6 +28,7 @@
     started = true;
   };
   const newGame = () => {
+    window.location.href = "/";
     showInput = false;
     word = "";
     started = false;
@@ -44,6 +49,16 @@
     guessLetter(key);
   };
   document.addEventListener("keydown", mainKeyUpHandler);
+  if (mode == "daily") {
+    word =
+      phrases[
+        Math.floor(new Date().valueOf() / (1000 * 60 * 60 * 24)) %
+          phrases.length
+      ];
+    startGame();
+  } else if (mode == "random") {
+    startWithRandom();
+  }
   $: wordLetters = new Set(
     word
       .replaceAll(" ", "")
@@ -73,45 +88,59 @@
 <main>
   {#if !started}
     <div class="phraseInput">
-      <h1>Hangman</h1>
-      <div class="inputsDiv">
-        {#if showInput}
+      <a href="/" class="title">
+        <h1>Hangman</h1>
+      </a>
+      {#if mode == "custom"}
+        <div class="inputsDiv">
+          {#if showInput}
+            <input
+              type="text"
+              bind:value={word}
+              placeholder="Write a word or phrase"
+              on:keyup={inputkeyUpHandler}
+            />
+          {:else}
+            <input
+              type="password"
+              bind:value={word}
+              placeholder="Write a word or phrase"
+              on:keyup={inputkeyUpHandler}
+            />
+          {/if}
           <input
-            type="text"
-            bind:value={word}
-            placeholder="Write a word or phrase"
-            on:keyup={inputkeyUpHandler}
+            type="button"
+            class="btn"
+            value="start"
+            on:click={startGame}
+            disabled={word.length == 0}
           />
-        {:else}
-          <input
-            type="password"
-            bind:value={word}
-            placeholder="Write a word or phrase"
-            on:keyup={inputkeyUpHandler}
-          />
-        {/if}
-        <input
-          type="button"
-          class="btn"
-          value="start"
-          on:click={startGame}
-          disabled={word.length == 0}
-        />
-      </div>
-      <label>
-        <input type="checkbox" bind:checked={showInput} />
-        Show phrase
-      </label>
-      <span>or</span>
-      <input
-        type="button"
-        class="btn"
-        value="Random phrase"
-        on:click={startWithRandom}
-      />
+        </div>
+        <label>
+          <input type="checkbox" bind:checked={showInput} />
+          Show phrase
+        </label>
+      {:else}
+        <div class="modeSelector">
+          <a href="/daily">
+            <h1>Daily</h1>
+            <p class="tip">Different phrase every day!</p>
+          </a>
+          <a href="/random">
+            <h1>Random</h1>
+            <p class="tip">Different phrase every time!</p>
+          </a>
+          <a href="/custom">
+            <h1>Custom</h1>
+            <p class="tip">Make a custom phrase for your friend!</p>
+          </a>
+        </div>
+      {/if}
       <p class="tip">
-        Made by <a href="https://github.com/Szedann/hangman" target="_blank"
-          >Szedann</a
+        Made by <a
+          rel="noreferrer"
+          href="https://github.com/Szedann/hangman"
+          target="_blank">Szedann</a
         >
       </p>
     </div>
@@ -168,6 +197,16 @@
     justify-content: center;
     gap: 10px;
     min-height: 80vh;
+  }
+
+  .title {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .title > h1 {
+    font-size: 2.3em;
+    font-weight: 900;
   }
 
   input {
@@ -243,10 +282,6 @@
     margin: 20px 0;
     gap: 10px;
   }
-  .phraseInput > h1 {
-    font-size: 2.3em;
-    font-weight: 900;
-  }
   .inputsDiv {
     display: flex;
     border-radius: 0.2em;
@@ -277,7 +312,7 @@
   }
   .phraseInput > input {
     border-radius: 0.2em;
-    background-color: #f40;
+    background-color: hsl(16, 100%, 50%);
     color: #fff;
     font-weight: 700;
   }
@@ -294,6 +329,34 @@
     color: inherit;
     font-weight: bold;
     text-decoration-thickness: 3px;
+  }
+  .modeSelector {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 0 10px;
+  }
+  .modeSelector > a {
+    display: flex;
+    flex-direction: column;
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    background-color: rgb(0, 0, 0);
+    border-radius: 0.2em;
+    padding: 0.6em;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    aspect-ratio: 16 / 9;
+  }
+  .modeSelector > a > h1 {
+    font-weight: 700;
+  }
+  .modeSelector > a > h1,
+  .modeSelector > a > p {
+    margin: 0;
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -316,6 +379,10 @@
 
     .phraseInput > input {
       background-color: rgb(153, 58, 58);
+    }
+    .modeSelector > a {
+      color: #000;
+      background-color: #fff;
     }
   }
 </style>
