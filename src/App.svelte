@@ -310,12 +310,6 @@
     background-color: #38f;
     color: #fff;
   }
-  .phraseInput > input {
-    border-radius: 0.2em;
-    background-color: hsl(16, 100%, 50%);
-    color: #fff;
-    font-weight: 700;
-  }
   .phraseInput input[type="button"] {
     cursor: pointer;
   }
@@ -374,10 +368,6 @@
       background-color: rgb(62, 134, 62);
     }
     .letter[data-correct="false"] {
-      background-color: rgb(153, 58, 58);
-    }
-
-    .phraseInput > input {
       background-color: rgb(153, 58, 58);
     }
     .modeSelector > a {
